@@ -7,8 +7,6 @@ pipeline {
         stage('Stage 1') {
             steps {
                 echo 'Hello world!' 
-            }
-            steps {
                 sh 'printenv'
             }
         }
@@ -18,8 +16,6 @@ pipeline {
             } 
             steps {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
-            }
-            steps {
                 sh 'printenv'
             }
         }
