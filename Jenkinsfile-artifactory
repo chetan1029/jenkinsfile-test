@@ -1,7 +1,7 @@
 node {
     checkout scm
     
-    docker.withRegistry('https://arm.seli.gic.ericsson.se/ui/login/', 'artifactory-ericsson-credentail') {
+    docker.withRegistry('https://armdocker.rnd.ericsson.se/', 'artifactory-ericsson-credentail') {
 
         def candi_frontend = docker.build("armdocker.rnd.ericsson.se/stsi/ddcandi-frontend-demo:latest", "./frontend") 
 
