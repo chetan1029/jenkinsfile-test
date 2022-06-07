@@ -1,0 +1,95 @@
+{
+  "name": "ml_nf_dimensioning_poc",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@eds/vanilla": "^3.12.0",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/jest": "^27.0.2",
+    "ansi-regex": "^6.0.1",
+    "axios": "^0.25.0",
+    "browserify-fs": "^1.0.0",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "crypto": "^1.0.1",
+    "crypto-browserify": "^3.12.0",
+    "d3": "^5.7.0",
+    "d3-fetch": "^1.2.0",
+    "dragula": "^3.7.2",
+    "history": "^5.0.0",
+    "https-browserify": "^1.0.0",
+    "javascript-time-ago": "^2.0.13",
+    "joi": "^17.6.0",
+    "jsonwebtoken": "^7.4.3",
+    "jspdf": "^2.5.1",
+    "jwt-decode": "^3.1.2",
+    "leaflet": "^1.7.1",
+    "mapbox-gl": "^2.7.0",
+    "mapbox-gl-styles": "^2.0.2",
+    "net": "^1.0.2",
+    "net-browserify": "^0.2.4",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "prismjs": "^1.15.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-dotenv": "^0.1.3",
+    "react-json-to-csv": "^1.0.4",
+    "react-redux": "^7.2.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^5.0.0",
+    "react-to-pdf": "^0.0.14",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "sass": "^1.43.4",
+    "socket.io-client": "^3.1.3",
+    "stream": "^0.0.2",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "tls-browserify": "^0.2.2",
+    "typescript": "^3.9.5",
+    "util": "^0.12.4"
+  },
+  "scripts": {
+    "start": "react-dotenv && react-scripts start",
+    "build": "react-dotenv && react-scripts build'",
+    "serve": "react-dotenv && serve build",
+    "test": "jest",
+    "eject": "react-scripts eject",
+    "dev": "chmod +x ./env.sh && bash ./env.sh && cp env-config.js ./public/ && react-scripts start"
+  },
+  "browser": {
+    "fs": false,
+    "tls": false,
+    "net": false,
+    "path": false,
+    "zlib": false,
+    "http": false,
+    "https": false,
+    "stream": false,
+    "crypto": false
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "react-dotenv": {
+    "whitelist": ["BACKEND_APP_URL", "PARSE_STATUS_SOCKET_URL", "LDAP_TOKEN_SIGNATURE"]
+  }
+}

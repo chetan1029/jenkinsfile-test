@@ -1,0 +1,9 @@
+node {
+    checkout scm
+    def candi_frontend = docker.build("candi-frontend", "./frontend") 
+
+    candi_frontend.inside {
+        sh 'node --version'
+    }
+
+}

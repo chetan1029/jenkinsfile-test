@@ -1,0 +1,10 @@
+flask
+flask_restful
+flask_jsonpify
+flask-cors
+flask_pymongo
+gunicorn
+lxml
+datetime
+python-dateutil
+python-decouple
