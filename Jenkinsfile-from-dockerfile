@@ -6,4 +6,16 @@ node {
         sh 'node --version'
     }
 
+    def candi_backend = docker.build("candi-backend", "./backend") 
+
+    candi_backend.inside {
+        sh 'node --version'
+    }
+
+    def candi_parser = docker.build("candi-parser", "./parser-api") 
+
+    candi_parser.inside {
+        sh 'python --version'
+    }
+
 }
