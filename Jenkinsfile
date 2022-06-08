@@ -23,9 +23,9 @@ node {
             sh 'python --version'
         }
     }
-    stage('Deploy') {
-        // candi_frontend.push()
-        // candi_backend.push()
-        // candi_parser.push() 
-    }
+    // stage('Deploy') {
+    //     candi_frontend.push()
+    //     candi_backend.push()
+    //     candi_parser.push() 
+    // }
 }
