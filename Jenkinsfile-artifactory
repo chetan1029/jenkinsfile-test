@@ -1,16 +1,12 @@
 node {
     checkout scm
     
-    docker.withRegistry('https://armdocker.rnd.ericsson.se/', 'artifactory-ericsson-credentail') {
+    def candi_frontend = docker.build("armdocker.rnd.ericsson.se/stsi/ddcandi-frontend:0.0.1", "./frontend") 
 
-        def candi_frontend = docker.build("armdocker.rnd.ericsson.se/stsi/ddcandi-frontend-demo:latest", "./frontend") 
-
-        candi_frontend.inside {
-            sh 'node --version'
-        }
-
-        /* Push the container to the custom Registry */
-        candi_frontend.push()
+    candi_frontend.inside {
+        sh 'node --version'
     }
 
+        /* Push the container to the custom Registry */
+    candi_frontend.push()
 }
