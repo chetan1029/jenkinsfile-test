@@ -1,23 +1,32 @@
-pipeline {
-    agent any
-    environment { 
-        jk_name = 'jk testing'
-        TEST_SECRET = credentials('testing-sceret-text')
-    } 
+node {
+    checkout scm
+
     stages {
-        stage('Stage 1') {
+        stage('Build') {
             steps {
-                echo 'Hello world!'
-                echo "Test Secret ${env.TEST_SECRET}"
+                def candi_frontend = docker.build("armdocker.rnd.ericsson.se/stsi/ddcandi-frontend:0.0.1", "./frontend")
+                def candi_backend = docker.build("armdocker.rnd.ericsson.se/stsi/candi-backend:0.0.1", "./backend") 
+                def candi_parser = docker.build("armdocker.rnd.ericsson.se/stsi/candi-parser:0.0.1", "./parser-api") 
             }
         }
-        stage('stage 2') {
-            environment { 
-                jk_stage = 'jk stage 2'
-            } 
+        stage('Test') { 
             steps {
-                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
-                sh 'printenv'
+                candi_frontend.inside {
+                    sh 'node --version'
+                }
+                candi_backend.inside {
+                    sh 'node --version'
+                }
+                candi_parser.inside {
+                    sh 'python --version'
+                }
+            }
+        }
+        stage('Artifactory') {
+            steps {
+                candi_frontend.push()
+                candi_backend.push()
+                candi_parser.push() 
             }
         }
     }
