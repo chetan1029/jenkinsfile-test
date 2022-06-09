@@ -8,9 +8,9 @@ node {
         checkout scm
     }
     stage('Build') {
-        candi_frontend = docker.build("armdocker.rnd.ericsson.se/stsi/ddcandi-frontend:0.0.1", "./frontend")
-        candi_backend = docker.build("armdocker.rnd.ericsson.se/stsi/ddcandi-backend:0.0.1", "./backend") 
-        candi_parser = docker.build("armdocker.rnd.ericsson.se/stsi/ddcandi-parser:0.0.1", "./parser-api") 
+        candi_frontend = docker.build("armdocker.rnd.ericsson.se/stsi/ddcandi-frontend:0.0.${env.BUILD_ID}", "./frontend")
+        candi_backend = docker.build("armdocker.rnd.ericsson.se/stsi/ddcandi-backend:0.0.${env.BUILD_ID}", "./backend") 
+        candi_parser = docker.build("armdocker.rnd.ericsson.se/stsi/ddcandi-parser:0.0.${env.BUILD_ID}", "./parser-api") 
     }
     stage('Test') { 
         candi_frontend.inside {
