@@ -28,4 +28,7 @@ node {
     //     candi_backend.push()
     //     candi_parser.push() 
     // }
+    stage('Kubernetes Deploy') { 
+        sh 'kubectl apply -f k8s-deployment-candi-prod-test.yaml'
+    }
 }

@@ -1,0 +1,402 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ddcandi
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ddcandi-backend-configmap
+  namespace: ddcandi
+data:
+  BACKEND_APP_HOST: "ddcandi-backend"
+  BACKEND_APP_PORT: "2000"
+  PARSE_STATUS_SOCKET_PORT: "2001"
+  FRONTEND_APP_URL: "ddcandi-frontend:3000"
+  PARSER_HOST: "ddcandi-parser"
+  PARSER_PORT: "5000"
+  DATA_POINTS_THRESHOLD: "1"
+  CRONJOB_TIMER_CONFIGURATION: "* 1 * * *"
+  LDAP_URL_ESIGNUM: "ldap://ericsson.se:389"
+  LDAP_URL_XSIGNUM: "ldaps://eemeasero01.eemea.ericsson.se:3269"
+  LDAP_URL_ZSIGNUM: "ldaps://ldap-egad.internal.ericsson.com:3269"
+  LDAP_DN_USER_ESIGNUM: "OU=CA,OU=User,OU=P001,OU=ID,OU=Data,DC=ericsson,DC=se"
+  LDAP_DN_USER_XSIGNUM: "OU=External,OU=P017,OU=ID,OU=Data,DC=ericsson,DC=se"
+  LDAP_DN_USER_ZSIGNUM: "OU=External,OU=P017,OU=ID,OU=Data,DC=ericsson,DC=se"
+  LDAP_TOKEN_EXPIRATION_TIME: "86400"
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ddcandi-backend-secret
+  namespace: ddcandi
+type: Opaque
+data:
+  LDAP_TOKEN_SIGNATURE: 'c2VjcmV0Cg=='
+  DB_CONFIG_MONGODB_MAIN: 'eyJ1cmwiOiAibW9uZ29kYjovL3VfRERDYW5kaTozRWNmSnAyNTlTYUdpNlVAZGRjYW5kaS1tb25nby00NjUtcC5zZXJvLmdpYy5lcmljc3Nvbi5zZToyNzAxNyxkZGNhbmRpLW1vbmdvLTQ2NS0tcy5zZXJvLmdpYy5lcmljc3Nvbi5zZToyNzAxNy9ERENhbmRpIiwiY29ubmVjdGlvbl9uYW1lIiA6ICIyRENBTkRJX01vbmdvX0dJQyIsImRhdGFiYXNlX25hbWUiOiAiRERDYW5kaSIsInBhcnNlZF9kYXRhX2NvbGxlY3Rpb24iOiAicGFyc2VkX2RhdGEiLCJtb2RlbHNfY29sbGVjdGlvbiI6ICJtb2RlbHMiLCJ1c2Vyc19jb2xsZWN0aW9uIjogInVzZXJzIiwic29sdXRpb25zX2NvbGxlY3Rpb24iOiAic29sdXRpb25zIiwidXJsc19jb2xsZWN0aW9uIjogInVybHMifQ=='
+  DB_CONFIGS_MONGODB_SUB: 'W3siaWQiOiAic3ViX2RiX2NhbmRpMSIsInVybCI6ICJtb25nb2RiOi8vdV9ERENhbmRpOjNFY2ZKcDI1OVNhR2k2VUBkZGNhbmRpLW1vbmdvLTQ2NS1wLnNlcm8uZ2ljLmVyaWNzc29uLnNlOjI3MDE3LGRkY2FuZGktbW9uZ28tNDY1LS1zLnNlcm8uZ2ljLmVyaWNzc29uLnNlOjI3MDE3L0REQ2FuZGkiLCJjb25uZWN0aW9uX25hbWUiIDogIjJEQ0FORElfTW9uZ29fR0lDIiwiZGF0YWJhc2VfbmFtZSI6ICJERENhbmRpIiwicGFyc2VkX2RhdGFfY29sbGVjdGlvbiI6ICJwYXJzZWRfZGF0YSIsImNoYXJ0c19jb2xsZWN0aW9uIjogImNoYXJ0cyJ9XQ=='
+  DSS_CONFIG_ML_SERVER: 'eyJ1cmwiOiAiaHR0cHM6Ly9jaXRpemVuZGF0YXNjaWVuY2UtZGVzaWduLXNiLmludGVybmFsLmVyaWNzc29uLmNvbS9wdWJsaWMvYXBpIiwiZGVwbG95ZXJfdXJsIjogImh0dHBzOi8vY2l0aXplbmRhdGFzY2llbmNlLWRlc2lnbi1zYi5pbnRlcm5hbC5lcmljc3Nvbi5jb20vcHVibGljL2FwaSIsInZzYmdfcHJvamVjdF9rZXkiOiAiMkRDQU5ESVZTQkciLCJ2bXRhc19wcm9qZWN0X2tleSI6ICIyRENBTkRJVk1UQVMiLCJ2Y3NjZl9wcm9qZWN0X2tleSI6ICIyRENBTkRJVkNTQ0YiLCJ2YmdmX3Byb2plY3Rfa2V5IjogIjJEQ0FORElWQkdGIiwidmVtZV9wcm9qZWN0X2tleSI6ICIyRENBTkRJVkVNRSIsInZtcmZfcHJvamVjdF9rZXkiOiAiMkRDQU5ESVZNUkYiLCJ0cmFpbl92c2JnX3NjZW5hcmlvX2lkIjogIjJEQ0FORElTQ0VOQVJJT1ZTQkciLCJ0cmFpbl92bXRhc19zY2VuYXJpb19pZCI6ICIyRENBTkRJU0NFTkFSSU9WTVRBUyIsInRyYWluX3Zjc2NmX3NjZW5hcmlvX2lkIjogIjJEQ0FORElTQ0VOQVJJT1ZDU0NGIiwidHJhaW5fdmJnZl9zY2VuYXJpb19pZCI6ICIyRENBTkRJU0NFTkFSSU9WQkdGIiwidHJhaW5fdmVtZV9zY2VuYXJpb19pZCI6ICIyRENBTkRJU0NFTkFSSU9WRU1FIiwidHJhaW5fdm1yZl9zY2VuYXJpb19pZCI6ICIyRENBTkRJU0NFTkFSSU9WTVJGIiwidnNiZ19jaGFydF9wcm9qZWN0X2tleSI6ICJDSEFSVFMyRENBTkRJVlNCRyIsInZtdGFzX2NoYXJ0X3Byb2plY3Rfa2V5IjogIkNIQVJUUzJEQ0FORElWTVRBUyIsInZjc2NmX2NoYXJ0X3Byb2plY3Rfa2V5IjogIkNIQVJUUzJEQ0FORElWQ1NDRiIsInZiZ2ZfY2hhcnRfcHJvamVjdF9rZXkiOiAiQ0hBUlRTMkRDQU5ESVZCR0YiLCJ2ZW1lX2NoYXJ0X3Byb2plY3Rfa2V5IjogIkNIQVJUUzJEQ0FORElWRU1FIiwidm1yZl9jaGFydF9wcm9qZWN0X2tleSI6ICJDSEFSVFMyRENBTkRJVk1SRiIsImNoYXJ0X3ZzYmdfc2NlbmFyaW9faWQiOiAiMkRDQU5ESUNIQVJUU1NDRU5BUklPVlNCRyIsImNoYXJ0X3ZtdGFzX3NjZW5hcmlvX2lkIjogIjJEQ0FORElDSEFSVFNTQ0VOQVJJT1ZNVEFTIiwiY2hhcnRfdmNzY2Zfc2NlbmFyaW9faWQiOiAiMkRDQU5ESUNIQVJUU1NDRU5BUklPVkNTQ0YiLCJjaGFydF92YmdmX3NjZW5hcmlvX2lkIjogIjJEQ0FORElDSEFSVFNTQ0VOQVJJT1ZCR0YiLCJjaGFydF92ZW1lX3NjZW5hcmlvX2lkIjogIjJEQ0FORElDSEFSVFNTQ0VOQVJJT1ZFTUUiLCJjaGFydF92bXJmX3NjZW5hcmlvX2lkIjogIjJEQ0FORElDSEFSVFNTQ0VOQVJJT1ZNUkYifQ=='
+  DSS_CONFIG_API_SECRETS: 'eyJkZXNpZ24iOnsgImdsb2JhbC1rZXkiOiAic09DNFBabTd3ZTZ5Y1JLU25HU2h1NGUzcXhIQVJNaXUiLCJwcm9qZWN0LWtleSI6ICJyT3BLVHNEYzVtNHJXZGVHOWRVblZkWjlZZERzalBSNiIsInBlcnNvbmFsLWtleSI6ICJyT3BLVHNEYzVtNHJXZGVHOWRVblZkWjlZZERzalBSNiJ9LCJhcGktZGVwbG95ZXIiOiB7Imdsb2JhbC1rZXkiOiAic09DNFBabTd3ZTZ5Y1JLU25HU2h1NGUzcXhIQVJNaXUiLCJwcm9qZWN0LWtleSI6ICJyT3BLVHNEYzVtNHJXZGVHOWRVblZkWjlZZERzalBSNiIsInBlcnNvbmFsLWtleSI6ICJyT3BLVHNEYzVtNHJXZGVHOWRVblZkWjlZZERzalBSNiJ9fQo='
+
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ddcandi-frontend-configmap
+  namespace: ddcandi
+data:
+  PARSE_STATUS_SOCKET_URL: "http://10.200.116.228:2001"
+  BACKEND_APP_URL: "http://10.200.116.228:2000"
+  LDAP_TOKEN_SIGNATURE: "secret"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ddcandi-parser-configmap
+  namespace: ddcandi
+data:
+  DATABASE_URI: "mongodb://u_DDCandi:3EcfJp259SaGi6U@ddcandi-mongo-465-p.sero.gic.ericsson.se:27017,ddcandi-mongo-465--s.sero.gic.ericsson.se:27017/DDCandi"
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ddcandi-frontend-secret
+  namespace: ddcandi
+type: Opaque
+data:
+  LDAP_TOKEN_SIGNATURE: 'c2VjcmV0Cg=='
+
+--- 
+apiVersion: v1
+kind: PersistentVolume
+metadata: 
+  name: ddcandi-pv
+  namespace: ddcandi
+spec: 
+  accessModes: 
+    - ReadWriteMany
+  capacity: 
+    storage: 10Gi
+  hostPath: 
+    path: /mnt/data
+  storageClassName: local-storage
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ddcandi-pvc
+  namespace: ddcandi
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: local-storage
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ddcandi-parser
+  namespace: ddcandi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ddcandi-parser
+  template:
+    metadata:
+      labels:
+        app: ddcandi-parser
+    spec:
+      containers:
+        - name: ddcandi-parser
+          #image: ml_nf_dimensioning_web_candi-parser-service:latest
+          image: armdocker.rnd.ericsson.se/stsi/ddcandi-parser:1.0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: parser-volume
+              mountPath: "/app/uploads"
+          env:
+            - name: DATABASE_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-parser-configmap
+                  key: DATABASE_URI
+      restartPolicy: Always
+      volumes:
+        - name: parser-volume
+          persistentVolumeClaim:
+            claimName: ddcandi-pvc
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: ddcandi-parser
+  namespace: ddcandi
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 5000
+      targetPort: 5000
+      protocol: TCP
+      nodePort: 32301
+  selector:
+    app: ddcandi-parser
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ddcandi-backend
+  namespace: ddcandi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ddcandi-backend
+  template:
+    metadata:
+      labels:
+        app: ddcandi-backend
+    spec:
+      containers:
+        - name: ddcandi-backend
+          #image: ml_nf_dimensioning_web_candi-backend-service:latest
+          image: armdocker.rnd.ericsson.se/stsi/ddcandi-backend:1.0.2
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 2000
+          volumeMounts:
+            - name: backend-volume
+              mountPath: "/app/uploads"
+          env:
+            - name: BACKEND_APP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: BACKEND_APP_HOST
+            - name: BACKEND_APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: BACKEND_APP_PORT
+            - name: PARSE_STATUS_SOCKET_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: PARSE_STATUS_SOCKET_PORT
+            - name: FRONTEND_APP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: FRONTEND_APP_URL
+            - name: PARSER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: PARSER_HOST
+            - name: PARSER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: PARSER_PORT
+            - name: DATA_POINTS_THRESHOLD
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: DATA_POINTS_THRESHOLD
+            - name: CRONJOB_TIMER_CONFIGURATION
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: CRONJOB_TIMER_CONFIGURATION
+            - name: LDAP_URL_ESIGNUM
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: LDAP_URL_ESIGNUM
+            - name: LDAP_URL_XSIGNUM
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: LDAP_URL_XSIGNUM
+            - name: LDAP_URL_ZSIGNUM
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: LDAP_URL_ZSIGNUM
+            - name: LDAP_DN_USER_ESIGNUM
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: LDAP_DN_USER_ESIGNUM
+            - name: LDAP_DN_USER_XSIGNUM
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: LDAP_DN_USER_XSIGNUM
+            - name: LDAP_DN_USER_ZSIGNUM
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: LDAP_DN_USER_ZSIGNUM
+            - name: LDAP_TOKEN_SIGNATURE
+              valueFrom:
+                secretKeyRef:
+                  name: ddcandi-backend-secret
+                  key: LDAP_TOKEN_SIGNATURE
+            - name: LDAP_TOKEN_EXPIRATION_TIME
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-backend-configmap
+                  key: LDAP_TOKEN_EXPIRATION_TIME
+            - name: DB_CONFIG_MONGODB_MAIN
+              valueFrom:
+                secretKeyRef:
+                  name: ddcandi-backend-secret
+                  key: DB_CONFIG_MONGODB_MAIN
+            - name: DB_CONFIGS_MONGODB_SUB
+              valueFrom:
+                secretKeyRef:
+                  name: ddcandi-backend-secret
+                  key: DB_CONFIGS_MONGODB_SUB
+            - name: DSS_CONFIG_ML_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: ddcandi-backend-secret
+                  key: DSS_CONFIG_ML_SERVER
+            - name: DSS_CONFIG_API_SECRETS
+              valueFrom:
+                secretKeyRef:
+                  name: ddcandi-backend-secret
+                  key: DSS_CONFIG_API_SECRETS
+      restartPolicy: Always
+      volumes:
+        - name: backend-volume
+          persistentVolumeClaim:
+            claimName: ddcandi-pvc
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: ddcandi-backend
+  namespace: ddcandi
+spec:
+  type: LoadBalancer
+  ports:
+    - name: backend-main
+      protocol: TCP
+      port: 2000
+      targetPort: 2000
+      nodePort: 32201
+    - name: backend-parse
+      protocol: TCP
+      port: 2001
+      targetPort: 2001
+      nodePort: 32202
+    - name: backend-database
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
+      nodePort: 32203
+  selector:
+    app: ddcandi-backend
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ddcandi-frontend
+  namespace: ddcandi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ddcandi-frontend
+  template:
+    metadata:
+      labels:
+        app: ddcandi-frontend
+    spec:
+      containers:
+        - name: ddcandi-frontend
+          #image: ml_nf_dimensioning_web_candi-frontend-service:latest
+          image: armdocker.rnd.ericsson.se/stsi/ddcandi-frontend:1.0.2
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: BACKEND_APP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-frontend-configmap
+                  key: BACKEND_APP_URL
+            - name: PARSE_STATUS_SOCKET_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-frontend-configmap
+                  key: PARSE_STATUS_SOCKET_URL
+            - name: LDAP_TOKEN_SIGNATURE
+              valueFrom:
+                configMapKeyRef:
+                  name: ddcandi-frontend-configmap
+                  key: LDAP_TOKEN_SIGNATURE
+      restartPolicy: Always
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: ddcandi-frontend
+  namespace: ddcandi
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      nodePort: 32101
+  selector:
+    app: ddcandi-frontend
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ddcandi-frontend
+  namespace: ddcandi
+spec:
+  rules:
+  - host: ddcandi.cech025.rnd.gic.ericsson.se
+    http:
+      paths:
+      - backend:
+          serviceName: ddcandi-frontend
+          servicePort: 3000
+        path: /
+        pathType: ImplementationSpecific
