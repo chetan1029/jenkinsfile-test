@@ -31,7 +31,6 @@ node {
     stage('Kubernetes Deploy') { 
         //sh 'kubectl apply -f k8s-deployment-candi-prod-test.yaml'
         sh 'chmod +x ./k8s-deployment-candi-prod-test.yaml'
-        sh 'FILE="./k8s-deployment-candi-prod-test.yaml"'
-        sh 'cat $FILE'
+        sh 'cat ./k8s-deployment-candi-prod-test.yaml'
     }
 }
