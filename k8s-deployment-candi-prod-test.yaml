@@ -125,7 +125,7 @@ spec:
     spec:
       containers:
         - name: ddcandi-parser
-          image: armdocker.rnd.ericsson.se/stsi/ddcandi-parser:0.0.${env.BUILD_ID}
+          image: armdocker.rnd.ericsson.se/stsi/ddcandi-parser:0.0.BUILD_ID
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
@@ -180,7 +180,7 @@ spec:
     spec:
       containers:
         - name: ddcandi-backend
-          image: armdocker.rnd.ericsson.se/stsi/ddcandi-backend:0.0.${env.BUILD_ID}
+          image: armdocker.rnd.ericsson.se/stsi/ddcandi-backend:0.0.BUILD_ID
           imagePullPolicy: Always
           ports:
             - containerPort: 2000
@@ -341,7 +341,7 @@ spec:
     spec:
       containers:
         - name: ddcandi-frontend
-          image: armdocker.rnd.ericsson.se/stsi/ddcandi-frontend:0.0.${env.BUILD_ID}
+          image: armdocker.rnd.ericsson.se/stsi/ddcandi-frontend:0.0.BUILD_ID
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
