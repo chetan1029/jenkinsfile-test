@@ -32,8 +32,6 @@ node {
         sh 'chmod +x ./k8s-deployment-candi-prod-test.yaml'
         sh "sed -i 's|BUILD_ID|${env.BUILD_ID}|' ./k8s-deployment-candi-prod-test.yaml"
         withKubeConfig([credentialsId: 'K8s']) {
-            sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
-            sh 'chmod u+x ./kubectl'
             sh 'kubectl apply -f k8s-deployment-candi-prod-test.yaml'
         }
         //sh 'cat ./k8s-deployment-candi-prod-test.yaml'
