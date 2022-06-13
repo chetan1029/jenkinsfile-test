@@ -31,7 +31,7 @@ node {
     stage('Kubernetes Deploy') { 
         sh 'chmod +x ./k8s-deployment-candi-prod-test.yaml'
         sh "sed -i 's|BUILD_ID|${env.BUILD_ID}|' ./k8s-deployment-candi-prod-test.yaml"
-        withKubeConfig([credentialsId: 'k8s', serverUrl: 'https://macchiato.rnd.gic.ericsson.se/c/c-4pn67/monitoring']) {
+        withKubeConfig([credentialsId: 'K8s', serverUrl: 'https://macchiato.rnd.gic.ericsson.se/c/c-4pn67/monitoring']) {
             sh 'kubectl apply -f k8s-deployment-candi-prod-test.yaml'
         }
         //sh 'cat ./k8s-deployment-candi-prod-test.yaml'
