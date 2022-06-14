@@ -33,6 +33,8 @@ node {
         sh "sed -i 's|BUILD_ID|${env.BUILD_ID}|' ./k8s-deployment-candi-prod-test.yaml"
         withKubeConfig([credentialsId: 'K8s']) {
             sh 'kubectl apply -f k8s-deployment-candi-prod-test.yaml'
+            sh 'sleep 120'
+            sh 'kubectl get pods -n ddcandi'
         }
         //sh 'cat ./k8s-deployment-candi-prod-test.yaml'
     }
