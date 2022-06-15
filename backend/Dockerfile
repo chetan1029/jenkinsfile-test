@@ -16,7 +16,6 @@ WORKDIR /app
 # will be cached unless changes to one of those two files 
 # are made.
 COPY package.json ./
-#COPY ../parser-api ./parser-api
 
 RUN npm install --production
 #RUN npm upgrade

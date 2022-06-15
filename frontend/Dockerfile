@@ -33,37 +33,3 @@ EXPOSE 3000
 
 
 CMD [ "npm", "start" ]
-
-# # Build the application
-# RUN npm run build
-
-# #### Stage 2: Serve the React application from Nginx
-# FROM node:14-alpine
-
-# # Nginx config
-# RUN rm -rf /etc/nginx/conf.d
-# COPY conf /etc/nginx
-
-# RUN apk add --no-cache bash
-# RUN apk add --no-cache curl
-# RUN apk add --no-cache git
-
-# # Copy the react build from Stage 1
-# COPY --from=build /app/build /usr/share/nginx/html/
-
-# # Copy our custom nginx config
-# #COPY nginx.conf /etc/nginx/nginx.conf
-# #COPY sslcert /etc/nginx/sslcert
-
-# WORKDIR /usr/share/nginx/html
-# COPY env.sh .
-# COPY env .
-
-# # Make our shell script executable
-# RUN chmod +x ./env.sh
-
-# # Expose port 3000 to the Docker host, so we can access it
-# # from the outside.
-# EXPOSE 80
-
-# CMD ["/bin/sh", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
